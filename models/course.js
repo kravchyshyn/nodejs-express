@@ -39,6 +39,26 @@ class Course {
         })
     }
 
+    static async getById(id) {
+        const courses = await Course.getAll();
+        return courses.find(course => course.id === id);
+    // }
+        // return new Promise((resolve, reject) => {
+        //     fs.readFile(
+        //         path.join(__dirname, '..', 'data', 'courses.json'),
+        //         'utf-8',
+        //         (error, content) => {
+        //             if (error) {
+        //                 reject(error) 
+        //             }
+        //             else {
+        //                 resolve(JSON.parse(content));
+        //             }
+        //         }
+        //     )
+        // });
+    }
+
     static getAll() {
         return new Promise((resolve, reject) => {
             fs.readFile(

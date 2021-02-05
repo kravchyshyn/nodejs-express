@@ -1,6 +1,7 @@
 const { Router } = require('express');
 const router = Router();
-const Course = require('../models/course')
+const Course = require('../models/course');
+const { route } = require('./home');
 
 router.get('/', async (request, response) => {
 
@@ -10,6 +11,15 @@ router.get('/', async (request, response) => {
         title: 'Courses',
         isCourses: true,
         courses
+    });
+})
+
+router.get('/:id', async (request, response) => {
+    const course = await Course.getById(request.params.id);
+    response.render('course', {
+        layout: 'empty',
+        title: `Course ${course.title}`,
+        course
     });
 })
 
