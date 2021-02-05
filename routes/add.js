@@ -8,4 +8,10 @@ router.get('/', (request, response) => {
     });
 })
 
+router.post('/', (req, res) => {
+    console.log('data which we send by POST method', req.body);
+
+    res.redirect('/courses');
+})
+
 module.exports = router;
