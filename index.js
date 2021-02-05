@@ -22,21 +22,25 @@ app.set('views', 'views');
 app.use(express.static('public'));
 
 app.get('/', (request, response) => {
-    response.render('index');
-
-
-    // set response code status, in express code 200 is default value
-    // response.status(200);
-
-    //to render static html file
-    // response.sendFile(path.join(__dirname, 'views', 'index.html'))
+    response.render('index', {
+        title: 'Main page',
+        isHome: true
+    });
 })
 
-app.get('/about', (request, response) => {
-    response.render('about');
-    // res.sendFile(path.join(__dirname, 'views', 'about.html'))
-});
+app.get('/courses', (request, response) => {
+    response.render('courses', {
+        title: 'Courses',
+        isCourses: true
+    });
+})
 
+app.get('/add', (request, response) => {
+    response.render('add', {
+        title: 'Add new course',
+        isAdd: true
+    });
+})
 
 const PORT = process.env.PORT || 5000;
 
@@ -44,10 +48,10 @@ app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });
 
-
 // Додаванання динамічних html сторінок
 // Pug, EJS, Handlebars = шаблонізатори
 // npm install express-handlebars
 
+// https://handlebarsjs.com/
 
 
