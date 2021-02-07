@@ -1,6 +1,6 @@
 const {Schema, model} = require('mongoose');
 
-const schema = new Schema({
+const courseSchema = new Schema({
     title: {
         type: String,
         require: true
@@ -16,4 +16,15 @@ const schema = new Schema({
     }
 });
 
-module.exports = model('Course', schema);
+courseSchema.method('toClient', function () {
+    const course  = this.toObject();
+
+    course.id = course._id;
+    delete course._id
+
+    return course;
+})
+
+
+
+module.exports = model('Course', courseSchema);
