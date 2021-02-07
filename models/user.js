@@ -1,6 +1,6 @@
 const {Schema, model} = require('mongoose');
 
-const schema = new Schema({
+const userSchema = new Schema({
     name: {
         type: String,
         required: true
@@ -27,5 +27,29 @@ const schema = new Schema({
     }
 });
 
+userSchema.methods.addToCart = function(course) {
+    const items = [...this.cart.items]; // this.cart.items.concat();
+    const idx = items.findIndex(c => {
+        return c.courseId.toString() === course._id.toString()
+    });
 
-module.exports = model('User', schema);
+    if (idx >= 0) {
+        // items[idx].count = items[idx].count + 1;
+        items[idx].count += 1;
+    } else {
+        items.push({
+            courseId: course._id,
+            count: 1
+        });
+    }
+
+    // const newCart = {items: items};
+    // this.cart = newCart;
+
+    this.cart = {items};
+
+    return this.save();
+}
+
+
+module.exports = model('User', userSchema);
