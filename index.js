@@ -3,6 +3,9 @@ const path = require('path');
 const exphbs = require('express-handlebars'); 
 const app = express();
 const mongoose = require('mongoose');
+const Handlebars = require('handlebars')
+const {allowInsecurePrototypeAccess} = require('@handlebars/allow-prototype-access')
+ 
 
 const homeRoutes = require('./routes/home');
 const addRoutes = require('./routes/add');
@@ -12,11 +15,12 @@ const cartRoutes = require('./routes/cart');
 // Configuring of handlebars
 const hbs = exphbs.create({
     defaultLayout: 'main',
-    extname: 'hbs' // default value is handlebars
+    extname: 'hbs', // default value is handlebars
+    handlebars: allowInsecurePrototypeAccess(Handlebars)
 })
 
 // Confirm using of handlebars
-app.engine('hbs', hbs.engine);
+app.engine('hbs', hbs.engine)
 
 // Set view engine to express
 app.set('view engine', 'hbs');
@@ -41,7 +45,8 @@ async function start() {
         const mongodbUrl = `mongodb+srv://vitalii:${password}@cluster0.y5ybx.mongodb.net/${dbName}`
 
         await mongoose.connect(mongodbUrl, {
-            useNewUrlParser: true
+            useNewUrlParser: true,
+            useUnifiedTopology: true 
         });
 
         app.listen(PORT, () => {
