@@ -2,6 +2,7 @@ const express = require('express');
 const path = require('path');
 const exphbs = require('express-handlebars'); 
 const app = express();
+const mongoose = require('mongoose');
 
 const homeRoutes = require('./routes/home');
 const addRoutes = require('./routes/add');
@@ -30,11 +31,29 @@ app.use('/add', addRoutes);
 app.use('/courses', coursesRoutes);
 app.use('/cart', cartRoutes);
 
+
 const PORT = process.env.PORT || 5000;
 
-app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
-});
+async function start() {
+    try {
+        const dbName = 'shop';
+        const password = 'qw8QFXooUTC0T1sl';
+        const mongodbUrl = `mongodb+srv://vitalii:${password}@cluster0.y5ybx.mongodb.net/${dbName}`
+
+        await mongoose.connect(mongodbUrl, {
+            useNewUrlParser: true
+        });
+
+        app.listen(PORT, () => {
+            console.log(`Server is running on port ${PORT}`);
+        });
+    } catch (error) {
+        console.log(error)
+    }
+    
+}
+
+start()
 
 // Додаванання динамічних html сторінок
 // Pug, EJS, Handlebars = шаблонізатори
