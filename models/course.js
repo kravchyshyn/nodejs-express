@@ -9,7 +9,11 @@ const schema = new Schema({
         type: Number,
         requere: true
     },
-    image: String
+    image: String,
+    userId: {
+        type: Schema.Types.ObjectId,
+        ref: 'User'
+    }
 });
 
 module.exports = model('Course', schema);
