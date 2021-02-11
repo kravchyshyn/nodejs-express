@@ -11,6 +11,7 @@ const addRoutes = require('./routes/add');
 const coursesRoutes = require('./routes/courses');
 const cartRoutes = require('./routes/cart');
 const orderRoutes = require('./routes/order');
+const authRoutes = require('./routes/auth');
 
 const User = require('./models/user');
 
@@ -50,6 +51,7 @@ app.use('/add', addRoutes);
 app.use('/courses', coursesRoutes);
 app.use('/cart', cartRoutes);
 app.use('/orders', orderRoutes);
+app.use('/auth', authRoutes);
 
 const PORT = process.env.PORT || 5000;
 
