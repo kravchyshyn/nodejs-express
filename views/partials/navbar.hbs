@@ -9,36 +9,38 @@
           <li><a href="/">Main</a></li>
         {{/if}}
 
-
         {{#if isCourses}}
           <li class='active'><a href="/courses">Courses</a></li>
         {{else}}
           <li><a href="/courses">Courses</a></li>
         {{/if}}
 
+        {{#if isAuth}}
+            {{#if isAdd}}
+               <li class='active'><a href="/add">Add new course</a> </li>
+            {{else}}
+               <li><a href="/add">Add new course</a> </li>
+            {{/if}}
 
-        {{#if isAdd}}
-           <li class='active'><a href="/add">Add new course</a> </li>
-        {{else}}
-           <li><a href="/add">Add new course</a> </li>
-        {{/if}}
+            {{#if isCart}}
+               <li class='active'><a href="/cart">Cart</a> </li>
+            {{else}}
+               <li><a href="/cart">Cart</a> </li>
+            {{/if}}
 
-        {{#if isCart}}
-           <li class='active'><a href="/cart">Cart</a> </li>
-        {{else}}
-           <li><a href="/cart">Cart</a> </li>
-        {{/if}}
+            {{#if isOrders}}
+               <li class='active'><a href="/orders">Orders</a> </li>
+            {{else}}
+               <li><a href="/orders">Orders</a> </li>
+            {{/if}}
 
-        {{#if isOrders}}
-           <li class='active'><a href="/orders">Orders</a> </li>
+            <li><a href="/auth/logout">Logout</a> </li>
         {{else}}
-           <li><a href="/orders">Orders</a> </li>
-        {{/if}}
-
-        {{#if isLogin}}
-           <li class='active'><a href="/auth/login#login">Login</a> </li>
-        {{else}}
-           <li><a href="/auth/login#login">Login</a> </li>
+            {{#if isLogin}}
+                <li class='active'><a href="/auth/login#login">Login</a> </li>
+            {{else}}
+                <li><a href="/auth/login#login">Login</a> </li>
+            {{/if}}
         {{/if}}
       </ul>
     </div>
