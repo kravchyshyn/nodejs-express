@@ -40,3 +40,13 @@
 .auth {
     margin-top: 1rem;
 }
+
+
+.alert {
+    padding: .5rem 1rem;
+    margin-bottom: 0.5em;
+    background: rgba(255, 0, 0, .3);
+    color: red;
+    border-radius: 4px;
+    text-align: center;
+}

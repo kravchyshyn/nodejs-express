@@ -6,6 +6,7 @@ const MongoStore = require('connect-mongodb-session')(session);
 const varMiddleware = require('./middleware/variables');
 const userMiddleware = require('./middleware/user');
 const csrf = require('csurf');
+const flash = require('connect-flash');
 
 const app = express();
 const mongoose = require('mongoose');
@@ -18,8 +19,7 @@ const coursesRoutes = require('./routes/courses');
 const cartRoutes = require('./routes/cart');
 const orderRoutes = require('./routes/order');
 const authRoutes = require('./routes/auth');
-
-const User = require('./models/user');
+const { request } = require('express');
 
 const dbName = 'shop';
 const password = 'qw8QFXooUTC0T1sl';
@@ -54,6 +54,7 @@ app.use(session({
     store
 })); 
 app.use(csrf());
+app.use(flash())
 app.use(varMiddleware);
 app.use(userMiddleware);
 
@@ -73,18 +74,6 @@ async function start() {
             useUnifiedTopology: true,
             useFindAndModify: false
         });
-
-        const candidate = await User.findOne();
-
-        // if (!candidate) {
-        //     const user = new User({
-        //         email: 'vitalik1991ua@gmail.com',
-        //         name: 'Vitalii',
-        //         cart: {items: []}
-        //     });
-
-        //     await user.save();
-        // }
 
         app.listen(PORT, () => {
             console.log(`Server is running on port ${PORT}`);
