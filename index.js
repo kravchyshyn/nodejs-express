@@ -2,7 +2,9 @@ const express = require('express');
 const path = require('path');
 const exphbs = require('express-handlebars');
 const session = require('express-session');
+const MongoStore = require('connect-mongodb-session')(session);
 const varMiddleware = require('./middleware/variables');
+const userMiddleware = require('./middleware/user');
 
 const app = express();
 const mongoose = require('mongoose');
@@ -18,11 +20,20 @@ const authRoutes = require('./routes/auth');
 
 const User = require('./models/user');
 
+const dbName = 'shop';
+const password = 'qw8QFXooUTC0T1sl';
+const MONGODB_URI = `mongodb+srv://vitalii:${password}@cluster0.y5ybx.mongodb.net/${dbName}`
+
 // Configuring of handlebars
 const hbs = exphbs.create({
     defaultLayout: 'main',
     extname: 'hbs', // default value is handlebars
     handlebars: allowInsecurePrototypeAccess(Handlebars)
+})
+
+const store = new MongoStore({
+    collection: 'sessions',
+    uri: MONGODB_URI
 })
 
 // Confirm using of handlebars
@@ -33,27 +44,16 @@ app.set('view engine', 'hbs');
 // Set folder for views templates
 app.set('views', 'views');
 
-app.use(async (req, res, next)=> {
-    try {
-        const user = await User.findById('60205bebea8e15e1ad71e33a');
-        req.user = user;
-
-        next();
-        
-    } catch (error) {
-        console.log('error', error);
-    }
-
-})
-
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.urlencoded({extended: true}))
 app.use(session({
     secret: 'Some secret key',
     resave: false,
-    saveUninitialized: false
+    saveUninitialized: false,
+    store
 })); 
 app.use(varMiddleware);
+app.use(userMiddleware);
 
 app.use('/', homeRoutes);
 app.use('/add', addRoutes);
@@ -66,11 +66,7 @@ const PORT = process.env.PORT || 5000;
 
 async function start() {
     try {
-        const dbName = 'shop';
-        const password = 'qw8QFXooUTC0T1sl';
-        const mongodbUrl = `mongodb+srv://vitalii:${password}@cluster0.y5ybx.mongodb.net/${dbName}`
-
-        await mongoose.connect(mongodbUrl, {
+        await mongoose.connect(MONGODB_URI, {
             useNewUrlParser: true,
             useUnifiedTopology: true,
             useFindAndModify: false
@@ -78,15 +74,15 @@ async function start() {
 
         const candidate = await User.findOne();
 
-        if (!candidate) {
-            const user = new User({
-                email: 'vitalik1991ua@gmail.com',
-                name: 'Vitalii',
-                cart: {items: []}
-            });
+        // if (!candidate) {
+        //     const user = new User({
+        //         email: 'vitalik1991ua@gmail.com',
+        //         name: 'Vitalii',
+        //         cart: {items: []}
+        //     });
 
-            await user.save();
-        }
+        //     await user.save();
+        // }
 
         app.listen(PORT, () => {
             console.log(`Server is running on port ${PORT}`);
