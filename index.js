@@ -26,13 +26,14 @@ const keys = require('./keys');
 const hbs = exphbs.create({
     defaultLayout: 'main',
     extname: 'hbs', // default value is handlebars
-    handlebars: allowInsecurePrototypeAccess(Handlebars)
-})
+    handlebars: allowInsecurePrototypeAccess(Handlebars),
+    helpers: require('./utils/hbs-helpers')
+});
 
 const store = new MongoStore({
     collection: 'sessions',
     uri: keys.MONGODB_URI
-})
+});
 
 // Confirm using of handlebars
 app.engine('hbs', hbs.engine)
