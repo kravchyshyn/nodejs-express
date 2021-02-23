@@ -21,6 +21,7 @@ const orderRoutes = require('./routes/order');
 const authRoutes = require('./routes/auth');
 const { request } = require('express');
 const keys = require('./keys');
+const errorMiddleware = require('./middleware/error')
 
 // Configuring of handlebars
 const hbs = exphbs.create({
@@ -62,6 +63,7 @@ app.use('/courses', coursesRoutes);
 app.use('/cart', cartRoutes);
 app.use('/orders', orderRoutes);
 app.use('/auth', authRoutes);
+app.use(errorMiddleware);
 
 const PORT = process.env.PORT || 5000;
 
