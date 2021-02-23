@@ -8,7 +8,7 @@ const resetEmail = require('../emails/reset');
 const registerEmail = require('../emails/register');
 const crypto = require('crypto');
 const {validationResult} = require('express-validator')
-const {registerValidators} = require('../utils/validators');
+const {registerValidators, loginValidators} = require('../utils/validators');
 
 const transporter = nodemailer.createTransport(sendGridTransport({
     auth: { api_key: keys.SENDGRID_API_KEY }
@@ -32,29 +32,23 @@ router.get('/logout', (req, res) => {
     })
 });
 
-router.post('/login', async (req, res) => {
+router.post('/login', loginValidators, async (req, res) => {
     try {
         const {email, password} = req.body;
-        const candidate = await User.findOne({email});
+        const user = await User.findOne({email});
+        const areSame = await bcrypt.compare(password, user.password);
 
-        if (candidate) {
-            const areSame = await bcrypt.compare(password, candidate.password);
-
-            if (areSame) {
-                req.session.user = candidate;
-                req.session.isAuthenticated = true;
-                req.session.save((err) => {
-                    if (err) {
-                        console.log(err);
-                    }
-                    res.redirect('/');
-                });
-            } else {
-                req.flash('loginError', 'Invalid password. Please try again');
-                res.redirect('/auth/login/#login')
-            }
+        if (areSame) {
+            req.session.user = user;
+            req.session.isAuthenticated = true;
+            req.session.save((err) => {
+                if (err) {
+                    console.log(err);
+                }
+                res.redirect('/');
+            });
         } else {
-            req.flash('loginError', 'Incorrect user email');
+            req.flash('loginError', 'Invalid password. Please try again');
             res.redirect('/auth/login/#login')
         }
 
