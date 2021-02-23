@@ -54,7 +54,6 @@ router.post('/remove', auth, async (req, res) => {
     } catch( e ) {
         console.log('e', e);
     }
-   //    await Course.findByIdAndDelete( req.body.id);
 });
 
 router.post('/edit', auth, async (req, res) => {
@@ -68,8 +67,7 @@ router.post('/edit', auth, async (req, res) => {
 
         Object.assign(course, req.body);
         await course.save();
-        // delete req.body.id;
-        // await Course.findByIdAndUpdate(id, req.body);
+
         res.redirect('/courses') 
     } catch (error) {
         console.log(error);
