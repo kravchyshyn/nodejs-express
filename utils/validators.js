@@ -51,4 +51,10 @@ exports.loginValidators = [
         .isLength({min: 6, max: 56}, 'Password length must be more then 5 symbols')
         .isAlphanumeric().withMessage('Password have to contain letters and at least 1 digit')
         .trim()
-]
+];
+
+exports.courseValidators = [
+    body('title').isLength({min: 3}).withMessage('Minimal name length 3 symbols').trim(),
+    body('price', 'Please add valid price').isNumeric(),
+    body('image').isURL().withMessage('Please add correct image URL')
+];
