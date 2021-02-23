@@ -85,6 +85,8 @@ router.post('/edit', auth, courseValidators, async (req, res) => {
 
 router.get('/:id', async (request, response) => {
     try {
+        // TODO: add check of id;
+
         const course = await Course.findById(request.params.id);
         response.render('course', {
             layout: 'empty',
