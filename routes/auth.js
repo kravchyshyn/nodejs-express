@@ -7,6 +7,8 @@ const keys = require('../keys')
 const resetEmail = require('../emails/reset');
 const registerEmail = require('../emails/register');
 const crypto = require('crypto');
+const {validationResult} = require('express-validator')
+const {registerValidators} = require('../utils/validators');
 
 const transporter = nodemailer.createTransport(sendGridTransport({
     auth: { api_key: keys.SENDGRID_API_KEY }
@@ -61,25 +63,26 @@ router.post('/login', async (req, res) => {
     }
 });
 
-router.post('/register', async (req, res) => {
+router.post('/register', registerValidators, async (req, res) => {
     try {
-        const {name, email, password, confirm } = req.body;
-        const candidate = await User.findOne({email});
+        const {name, email, password } = req.body;
+        const errors = validationResult(req);
 
-        if (candidate) {
-            req.flash('registerError', 'User with such email is already exist');
-            res.redirect('/auth/login#register');
-        } else {
-            const hashPassword = await bcrypt.hash(password, 10)
-            const user = new User(
-                { name, email, password: hashPassword, cart: { items: []} 
-            });
+        if (!errors.isEmpty()) {
+            req.flash('registerError', errors.array()[0].msg)
 
-            await user.save();
-            await transporter.sendMail(registerEmail(email));
-
-            res.redirect('/auth/login#login');
+            return res.status(422).redirect('/auth/login#register');
+             // 422 - status який говорить що в нас є помилки валідації
         }
+
+        const hashPassword = await bcrypt.hash(password, 10)
+        const user = new User(
+            { name, email, password: hashPassword, cart: { items: []} 
+        });
+
+        await user.save();
+        await transporter.sendMail(registerEmail(email));
+        res.redirect('/auth/login#login');
 
     } catch (error) {
         console.log(error);
