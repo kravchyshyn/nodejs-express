@@ -35,6 +35,16 @@ router.get('/logout', (req, res) => {
 router.post('/login', loginValidators, async (req, res) => {
     try {
         const {email, password} = req.body;
+
+        const errors = validationResult(req);
+
+        if (!errors.isEmpty()) {
+            req.flash('loginError', errors.array()[0].msg)
+
+            return res.status(422).redirect('/auth/login#login');
+             // 422 - status який говорить що в нас є помилки валідації
+        }
+
         const user = await User.findOne({email});
         const areSame = await bcrypt.compare(password, user.password);
 

@@ -10,9 +10,9 @@ exports.registerValidators = [
         .isEmail().withMessage('Please type email value')
         .custom(async (value, {req}) => {
             try {
-                const user = await User({email: value});
+                const user = await User.findOne({email: value});
                 if (user) {
-                    return new Promise.reject(`User with email ${value} is already exists`);
+                    return Promise.reject(`User with email ${value} is already exists`);
                 }
             } catch (error) {
                 console.log(error);
@@ -35,12 +35,13 @@ exports.registerValidators = [
 
 exports.loginValidators = [
     body('email')
-    .isEmail().withMessage('Please type  email value')
-    .custom(async (val, {req}) => {
+    .isEmail().withMessage('Please type email value')
+    .custom(async (value, {req}) => {
         try {
-            const user = await User({email: value});
+            const user = await User.findOne({email: value});
+
             if (!user) {
-                return new Promise.reject(`User with email ${value} is not exist`);
+                return Promise.reject(`User with email ${value} is not exist`);
             }
         } catch (error) {
             console.log(error);
