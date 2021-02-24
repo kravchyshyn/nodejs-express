@@ -3,8 +3,7 @@ const path = require('path');
 const exphbs = require('express-handlebars');
 const session = require('express-session');
 const MongoStore = require('connect-mongodb-session')(session);
-const varMiddleware = require('./middleware/variables');
-const userMiddleware = require('./middleware/user');
+
 const csrf = require('csurf');
 const flash = require('connect-flash');
 
@@ -23,7 +22,11 @@ const profileRoutes = require('./routes/profile');
 
 const { request } = require('express');
 const keys = require('./keys');
-const errorMiddleware = require('./middleware/error')
+
+const varMiddleware = require('./middleware/variables');
+const userMiddleware = require('./middleware/user');
+const errorMiddleware = require('./middleware/error');
+const fileMiddleware = require('./middleware/file');
 
 // Configuring of handlebars
 const hbs = exphbs.create({
@@ -47,6 +50,7 @@ app.set('view engine', 'hbs');
 app.set('views', 'views');
 
 app.use(express.static(path.join(__dirname, 'public')));
+app.use('/images', express.static(path.join(__dirname, 'images')))
 app.use(express.urlencoded({extended: true}))
 app.use(session({
     secret: keys.SESSION_SECRET,
@@ -54,6 +58,7 @@ app.use(session({
     saveUninitialized: false,
     store
 })); 
+app.use(fileMiddleware.single('avatar'))
 app.use(csrf());
 app.use(flash())
 app.use(varMiddleware);
