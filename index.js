@@ -4,8 +4,10 @@ const exphbs = require('express-handlebars');
 const session = require('express-session');
 const MongoStore = require('connect-mongodb-session')(session);
 
+
 const csrf = require('csurf');
 const flash = require('connect-flash');
+const helmet = require('helmet')
 
 const app = express();
 const mongoose = require('mongoose');
@@ -60,7 +62,10 @@ app.use(session({
 })); 
 app.use(fileMiddleware.single('avatar'))
 app.use(csrf());
-app.use(flash())
+app.use(flash());
+app.use(helmet({
+    contentSecurityPolicy: false
+}));
 app.use(varMiddleware);
 app.use(userMiddleware);
 
