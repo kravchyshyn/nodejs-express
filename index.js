@@ -8,6 +8,7 @@ const MongoStore = require('connect-mongodb-session')(session);
 const csrf = require('csurf');
 const flash = require('connect-flash');
 const helmet = require('helmet')
+const compression = require('compression');
 
 const app = express();
 const mongoose = require('mongoose');
@@ -66,6 +67,7 @@ app.use(flash());
 app.use(helmet({
     contentSecurityPolicy: false
 }));
+app.use(compression())
 app.use(varMiddleware);
 app.use(userMiddleware);
 
