@@ -64,7 +64,7 @@ app.use(session({
 app.use(fileMiddleware.single('avatar'))
 app.use(csrf());
 app.use(flash());
-app.use(hherokyelmet({
+app.use(helmet({
     contentSecurityPolicy: false
 }));
 app.use(compression())
